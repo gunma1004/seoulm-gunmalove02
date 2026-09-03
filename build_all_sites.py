@@ -4,6 +4,9 @@ from string import Template
 
 BASE_URL = "https://seoulm-gunmalove02.netlify.app"
 
+# 🔥 네이버 서치아드바이저 소유권 확인 메타 태그
+NAVER_VERIFY_TAG = '<meta name="naver-site-verification" content="ac29a0b48a4ab3ead0744d53af9eaa965bbbcbbb" />'
+
 # 서울시 주요 자치구 및 동 데이터베이스
 regions = {
     "gangnamgu": {
@@ -157,9 +160,11 @@ dong_desc_pool_2 = ["신속한 방문과 편안한 휴식을 보장하는 홈타
 dong_desc_pool_3 = ["건식 6만원부터 시작하는 100% 후불제 출장마사지.", "심야 시간에도 추가 비용 없는 정찰제 홈타이.", "예약금 없이 안전하게 이용하는 후불제 서비스."]
 
 
-# 1. 서울 전체 통합 허브 페이지 템플릿 (`seoul/index.html`)
-seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>서울 출장마사지·스웨디시 홈케어 예약 종합 안내 | 서울건마사랑</title>
+# 1. 서울 전체 통합 허브 페이지 템플릿
+seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>서울 출장마사지·스웨디시 홈케어 예약 종합 안내 | 서울건마사랑</title>
 <meta name="description" content="서울 전 지역 출장 마사지 및 홈타이 안내 플랫폼. 전 자치구 30분 내 신속 방문. 건식 6만원부터 100% 후불제.">
+{NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/" style="font-size:13px;color:#7a5c60;">🏠 홈으로</a></div></header>
 <main>
@@ -176,13 +181,11 @@ seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta cha
         <p style="font-size:15px;line-height:1.8;"><b>📍 서울 전역 24시간 방문 케어 서비스:</b> 서울건마사랑은 서울시 25개 전 자치구 어디든 고객님이 계신 자택, 오피스텔, 원룸, 숙소로 30분 내 신속하게 방문하는 프리미엄 홈타이 플랫폼입니다. 심야 할증 없이 투명한 정찰제와 100% 후불제로 안전하게 이용하세요.</p>
       </div>    
       
-      <!-- 구(Region) 목록 그리드 -->
       <h3 style="font-size:17px;font-weight:800;margin-bottom:12px;color:var(--p);">서울 자치구 선택</h3>
       <div class="cm2-dong-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); margin-bottom:35px;">
         $region_cards_html
       </div>  
 
-      <!-- 5개 추천 제휴 샵 -->
       <div class="cm2-sec-hd">
         <h2>서울 전역 추천 제휴 샵 (5개소)</h2>
         <p class="cm2-sec-sub">새로고침할 때마다 제휴 업소 순서가 랜덤으로 변경되며, 바로 통화 및 문자가 가능합니다.</p>
@@ -197,8 +200,10 @@ seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta cha
 </body></html>""")
 
 # 구 단위 통합 페이지 템플릿
-region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
+region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$region_desc">
+{NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/" style="font-size:13px;color:#7a5c60;">📍 서울 전체 목록</a></div></header>
 <main>
@@ -278,8 +283,10 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
 </body></html>""")
 
 # 동 단위 페이지 템플릿
-dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>$dong_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
+dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>$dong_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$dong_desc">
+{NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/$key/" style="font-size:13px;color:#7a5c60;">📍 $region_name 목록</a></div></header>
 <main>
@@ -304,7 +311,7 @@ dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset=
 
       <div class="cm2-sec-hd"><h2>$dong_name 방문 마사지, 이런 점이 궁금해요</h2></div>
       <div style="background:#fff;padding:22px;border-radius:10px;border:1px solid var(--bdr);margin-bottom:35px;">
-        <p style="font-size:14px;line-height:1.8;color:var(--txt);">“집에 누군가를 부르는 게 처음이라 어색하지 않을까요?” $dong_name에서 처음 홈타이를 이용하시는 고객님들께서 종종 하시는 말씀입니다. 저희 서비스는 철저한 전문 소독과 위생 관리를 거친 최고급 매트와 타올, 아로마 용품을 직접 구비하여 방문하므로 고객님께서는 별도의 준비물 없이 편안하게 누워 계시기만 하면 됩니다.</p>
+        <p style="font-size:14px;line-height:1.8;color:var(--txt);">“집에 누군가를 부르는 게 처음이라 어색하지 않을까요?” $dong_name에서 처음 홈타이를 이용하시는 고객님들께서 종종 하시는 말씀입니다. 저희 서비스는 철저한 전문 소독과 위생 관리를 거친 최고급 매트와 타올, 아로마 용품을 직접 구비하여 방문하므로 고객님께서 따로 준비하실 것이 전혀 없습니다.</p>
       </div>
 
       <div class="cm2-sec-hd"><h2>$dong_name 홈타이 이용 절차</h2></div>
@@ -424,4 +431,4 @@ sitemap_xml += '</urlset>'
 with open("sitemap.xml", "w", encoding="utf-8") as f_sitemap:
     f_sitemap.write(sitemap_xml)
         
-print("✨ 서울 전체 허브 페이지(seoul/index.html), 구/동 페이지, sitemap.xml, robots.txt까지 완벽하게 자동 생성되었습니다!")
+print("✨ 네이버 소유권 태그 포함 전체 페이지, sitemap.xml, robots.txt 빌드가 완료되었습니다!")
