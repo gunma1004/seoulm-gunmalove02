@@ -2,7 +2,6 @@ import os
 import random
 from string import Template
 
-# 기본 도메인 주소 (본인의 Netlify 주소로 필요시 수정 가능)
 BASE_URL = "https://seoulm-gunmalove02.netlify.app"
 
 # 서울시 주요 자치구 및 동 데이터베이스
@@ -157,12 +156,53 @@ dong_desc_pool_1 = ["출장 마사지 및 홈타이 맞춤 안내.", "방문 홈
 dong_desc_pool_2 = ["신속한 방문과 편안한 휴식을 보장하는 홈타이.", "자택·숙소 어디든 30분 내 찾아가는 출장 마사지.", "익숙한 공간에서 누리는 전문 홈타이 테라피."]
 dong_desc_pool_3 = ["건식 6만원부터 시작하는 100% 후불제 출장마사지.", "심야 시간에도 추가 비용 없는 정찰제 홈타이.", "예약금 없이 안전하게 이용하는 후불제 서비스."]
 
-region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
-<meta name="description" content="$region_desc">
+
+# 1. 서울 전체 통합 허브 페이지 템플릿 (`seoul/index.html`)
+seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>서울 출장마사지·스웨디시 홈케어 예약 종합 안내 | 서울건마사랑</title>
+<meta name="description" content="서울 전 지역 출장 마사지 및 홈타이 안내 플랫폼. 전 자치구 30분 내 신속 방문. 건식 6만원부터 100% 후불제.">
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/" style="font-size:13px;color:#7a5c60;">🏠 홈으로</a></div></header>
 <main>
-  <nav class="cm2-bc"><div class="cm2-bc-inner"><a href="/">서울건마사랑</a> › <a href="/">서울</a> › $region_name</div></nav>
+  <nav class="cm2-bc"><div class="cm2-bc-inner"><a href="/">서울건마사랑</a> › 서울 전체 지역 안내</div></nav>
+  
+  <section class="cm2-sec">  
+    <div class="cm2-sec-inner">    
+      <div class="cm2-sec-hd">      
+        <h1 class="cm2-page-h1">서울 전 지역 출장마사지 및 홈타이 종합 안내</h1>      
+        <p class="cm2-sec-sub">원하시는 자치구(구)를 선택하시면 상세 제휴샵 및 맞춤 정보를 확인하실 수 있습니다.</p>    
+      </div>    
+      
+      <div style="background:#fff;border-left:3px solid #8a1f34;padding:22px;border-radius:0 8px 8px 0;margin-bottom:25px;box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+        <p style="font-size:15px;line-height:1.8;"><b>📍 서울 전역 24시간 방문 케어 서비스:</b> 서울건마사랑은 서울시 25개 전 자치구 어디든 고객님이 계신 자택, 오피스텔, 원룸, 숙소로 30분 내 신속하게 방문하는 프리미엄 홈타이 플랫폼입니다. 심야 할증 없이 투명한 정찰제와 100% 후불제로 안전하게 이용하세요.</p>
+      </div>    
+      
+      <!-- 구(Region) 목록 그리드 -->
+      <h3 style="font-size:17px;font-weight:800;margin-bottom:12px;color:var(--p);">서울 자치구 선택</h3>
+      <div class="cm2-dong-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); margin-bottom:35px;">
+        $region_cards_html
+      </div>  
+
+      <!-- 5개 추천 제휴 샵 -->
+      <div class="cm2-sec-hd">
+        <h2>서울 전역 추천 제휴 샵 (5개소)</h2>
+        <p class="cm2-sec-sub">새로고침할 때마다 제휴 업소 순서가 랜덤으로 변경되며, 바로 통화 및 문자가 가능합니다.</p>
+      </div>
+      <div id="random-shop-list" class="cm2-shop-grid" style="margin-bottom:35px;"></div>
+
+    </div>
+  </section>
+</main>
+<footer class="cm2-ft"><div class="cm2-sec-inner"><p>© 2026 서울건마사랑. All rights reserved.</p></div></footer>
+{shops_script}
+</body></html>""")
+
+# 구 단위 통합 페이지 템플릿
+region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
+<meta name="description" content="$region_desc">
+<style>{common_style}</style></head><body>
+<header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/" style="font-size:13px;color:#7a5c60;">📍 서울 전체 목록</a></div></header>
+<main>
+  <nav class="cm2-bc"><div class="cm2-bc-inner"><a href="/">서울건마사랑</a> › <a href="/seoul/">서울</a> › $region_name</div></nav>
   
   <section class="cm2-sec">  
     <div class="cm2-sec-inner">    
@@ -173,7 +213,7 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
       
       <div style="background:#fff;border-left:3px solid #8a1f34;padding:22px;border-radius:0 8px 8px 0;margin-bottom:25px;box-shadow:0 2px 8px rgba(0,0,0,0.02);">
         <p style="font-size:15px;line-height:1.8;"><b>📍 $region_name 지역 특성 및 맞춤 방문 안내:</b> $intro</p>
-        <p style="font-size:15px;line-height:1.8;margin-top:12px;">$region_name 어디든 자택, 오피스텔, 원룸, 숙소 등 고객님이 머무시는 편안한 공간으로 전문 관리사가 직접 찾아갑니다. 무거운 장비를 직접 들고 이동하거나 샵을 찾아 헤맬 필요 없이, 제휴 샵 연락처를 통해 $region_name 전역에서 프리미엄 힐링 케어를 받으실 수 있습니다.</p>
+        <p style="font-size:15px;line-height:1.8;margin-top:12px;">$region_name 어디든 자택, 오피스텔, 원룸, 숙소 등 고객님이 머무시는 편안한 공간으로 전문 관리사가 직접 찾아갑니다.</p>
       </div>    
       
       <h3 style="font-size:17px;font-weight:800;margin-bottom:12px;color:var(--p);">$region_name 세부 동네 선택</h3>
@@ -189,7 +229,7 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
 
       <div class="cm2-sec-hd"><h2>$region_name 방문 마사지, 이런 점이 궁금해요</h2></div>
       <div style="background:#fff;padding:22px;border-radius:10px;border:1px solid var(--bdr);margin-bottom:35px;">
-        <p style="font-size:14px;line-height:1.8;color:var(--txt);">많은 고객님들께서 집이나 오피스텔로 관리사를 부르는 것에 대해 보안이나 위생, 준비 사항 등을 걱정하십니다. $region_name 홈타이 서비스는 철저한 신원 검증과 위생 교육을 이수한 전문 테라피스트가 최고급 아로마 오일과 매트를 직접 지참하여 방문하므로, 고객님께서는 별도의 준비물 없이 편안하게 누워 계시기만 하면 됩니다. 특히 외부 시선으로부터 완전히 자유로운 프라이빗한 공간에서 관리가 진행되므로 남녀노소 누구나 안심하고 이용하실 수 있습니다.</p>
+        <p style="font-size:14px;line-height:1.8;color:var(--txt);">많은 고객님들께서 집이나 오피스텔로 관리사를 부르는 것에 대해 보안이나 위생, 준비 사항 등을 걱정하십니다. $region_name 홈타이 서비스는 철저한 신원 검증과 위생 교육을 이수한 전문 테라피스트가 최고급 아로마 오일과 매트를 직접 지참하여 방문하므로, 고객님께서는 별도의 준비물 없이 편안하게 누워 계시기만 하면 됩니다.</p>
       </div>
 
       <div class="cm2-sec-hd"><h2>$region_name 홈타이 이용 절차</h2></div>
@@ -225,9 +265,9 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
 
       <div class="cm2-sec-hd"><h2>$region_name 자주 묻는 질문 (FAQ)</h2></div>
       <div class="cm2-faq">
-        <details open><summary>$region_name 모든 동네에 정말 다 방문이 가능한가요?</summary><p>네, $region_name 내 주거지, 오피스텔, 원룸, 숙소 등 차량 접근이 가능한 곳이라면 어디든 신속하게 방문합니다. 제휴 샵 연락처로 정확한 위치를 알려주시면 가장 가까운 관리사를 배정해 드립니다.</p></details>
-        <details><summary>결제는 선불인가요, 후불인가요?</summary><p>저희 서울건마사랑 제휴 샵들은 고객님의 신뢰를 위해 100% 후불제로 운영하고 있습니다. 관리가 모두 끝난 후에 현금, 계좌이체, 카드 중 편하신 방법으로 결제하시면 됩니다.</p></details>
-        <details><summary>늦은 새벽이나 주말에도 요금이 똑같나요?</summary><p>물론입니다. $region_name 전 지역에서 24시간 연중무휴로 운영되며, 심야 시간이나 주말이라고 해서 별도의 할증 요금을 부과하지 않습니다.</p></details>
+        <details open><summary>$region_name 모든 동네에 정말 다 방문이 가능한가요?</summary><p>네, $region_name 내 주거지, 오피스텔, 원룸, 숙소 등 차량 접근이 가능한 곳이라면 어디든 신속하게 방문합니다.</p></details>
+        <details><summary>결제는 선불인가요, 후불인가요?</summary><p>100% 후불제로 운영됩니다. 관리가 모두 끝난 후에 편하신 방법으로 결제하시면 됩니다.</p></details>
+        <details><summary>늦은 새벽이나 주말에도 요금이 똑같나요?</summary><p>물론입니다. 심야 시간이나 주말에도 별도의 할증 요금을 부과하지 않습니다.</p></details>
       </div>
 
     </div>
@@ -237,12 +277,13 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
 {shops_script}
 </body></html>""")
 
+# 동 단위 페이지 템플릿
 dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>$dong_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$dong_desc">
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/$key/" style="font-size:13px;color:#7a5c60;">📍 $region_name 목록</a></div></header>
 <main>
-  <nav class="cm2-bc"><div class="cm2-bc-inner"><a href="/">서울건마사랑</a> › <a href="/seoul/$key/">$region_name</a> › $dong_name</div></nav>
+  <nav class="cm2-bc"><div class="cm2-bc-inner"><a href="/">서울건마사랑</a> › <a href="/seoul/">서울</a> › <a href="/seoul/$key/">$region_name</a> › $dong_name</div></nav>
   
   <section class="cm2-sec">  
     <div class="cm2-sec-inner">    
@@ -253,7 +294,6 @@ dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset=
       
       <div style="background:#fff;border-left:3px solid #8a1f34;padding:22px;border-radius:0 8px 8px 0;margin-bottom:25px;box-shadow:0 2px 8px rgba(0,0,0,0.02);">
         <p style="font-size:15px;line-height:1.8;"><b>📍 $dong_name 지역 맞춤 방문 케어 안내:</b> $dong_name 주변은 조용한 주거 단지와 오피스텔이 어우러져 있어, 외부로 멀리 나가지 않고 자택이나 편안한 숙소 안에서 마사지를 받고자 하시는 분들의 문의가 매우 많은 곳입니다.</p>
-        <p style="font-size:15px;line-height:1.8;margin-top:12px;">교통망이 잘 연결되어 있어 제휴 샵을 통해 $dong_name 인근에 대기 중인 전문 관리사가 고객님의 프라이빗한 공간으로 신속하게 찾아갑니다. 늦은 야근 후 귀가하신 직장인 분들이나 집에서 편안하게 피로를 풀고 싶으신 분들께 최적의 만족을 드립니다.</p>
       </div>    
 
       <div class="cm2-sec-hd">
@@ -264,7 +304,7 @@ dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset=
 
       <div class="cm2-sec-hd"><h2>$dong_name 방문 마사지, 이런 점이 궁금해요</h2></div>
       <div style="background:#fff;padding:22px;border-radius:10px;border:1px solid var(--bdr);margin-bottom:35px;">
-        <p style="font-size:14px;line-height:1.8;color:var(--txt);">“집에 누군가를 부르는 게 처음이라 어색하지 않을까요?” $dong_name에서 처음 홈타이를 이용하시는 고객님들께서 종종 하시는 말씀입니다. 저희 서비스는 철저한 전문 소독과 위생 관리를 거친 최고급 매트와 타올, 아로마 용품을 직접 구비하여 방문하므로 고객님께서 따로 준비하실 것이 전혀 없습니다. $dong_name 내 자택, 오피스텔 등 익숙하고 편안한 본인의 공간에서 남의 시선 신경 쓸 필요 없이 온전히 휴식에만 집중하실 수 있습니다.</p>
+        <p style="font-size:14px;line-height:1.8;color:var(--txt);">“집에 누군가를 부르는 게 처음이라 어색하지 않을까요?” $dong_name에서 처음 홈타이를 이용하시는 고객님들께서 종종 하시는 말씀입니다. 저희 서비스는 철저한 전문 소독과 위생 관리를 거친 최고급 매트와 타올, 아로마 용품을 직접 구비하여 방문하므로 고객님께서는 별도의 준비물 없이 편안하게 누워 계시기만 하면 됩니다.</p>
       </div>
 
       <div class="cm2-sec-hd"><h2>$dong_name 홈타이 이용 절차</h2></div>
@@ -300,9 +340,9 @@ dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset=
 
       <div class="cm2-sec-hd"><h2>$dong_name 자주 묻는 질문 (FAQ)</h2></div>
       <div class="cm2-faq">
-        <details open><summary>$dong_name 오피스텔이나 원룸인데 방문이 되나요?</summary><p>네, $dong_name 내 모든 주거 형태(아파트, 오피s텔, 빌라, 원룸) 및 숙소에서 편리하게 이용하실 수 있습니다. 차량 주차가 가능하고 진입이 가능한 곳이라면 어디든 찾아갑니다.</p></details>
-        <details><summary>결제는 언제 어떻게 하나요?</summary><p>선입금이나 예약금 요구 없이 100% 후불제로 안전하게 운영됩니다. $dong_name에서의 관리가 모두 끝난 후 현금, 카드, 계좌이체 중 편하신 방법으로 결제해 주세요.</p></details>
-        <details><summary>늦은 밤이나 새벽 시간에도 추가 비용이 없나요?</summary><p>없습니다! $dong_name 홈타이 서비스는 24시간 연중무휴로 운영되며, 밤늦은 시간이나 새벽에 이용하시더라도 평일 낮과 동일한 정직한 요금으로 이용하실 수 있습니다.</p></details>
+        <details open><summary>$dong_name 오피스텔이나 원룸인데 방문이 되나요?</summary><p>네, $dong_name 내 모든 주거 형태(아파트, 오피스텔, 빌라, 원룸) 및 숙소에서 편리하게 이용하실 수 있습니다.</p></details>
+        <details><summary>결제는 언제 어떻게 하나요?</summary><p>선입금이나 예약금 요구 없이 100% 후불제로 안전하게 운영됩니다.</p></details>
+        <details><summary>늦은 밤이나 새벽 시간에도 추가 비용이 없나요?</summary><p>없습니다! 평일 낮과 동일한 정직한 요금으로 이용하실 수 있습니다.</p></details>
       </div>
 
     </div>
@@ -312,12 +352,16 @@ dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset=
 {shops_script}
 </body></html>""")
 
-# 생성 실행 루프 및 robots.txt, sitemap.xml 자동 생성
-urls = [f"{BASE_URL}/"]
+# 생성 실행 루프 및 sitemap.xml, robots.txt 자동 생성
+urls = [f"{BASE_URL}/", f"{BASE_URL}/seoul/"]
+region_cards_html = ""
+
 for key, data in regions.items():
     dir_path = f"seoul/{key}"
     os.makedirs(dir_path, exist_ok=True)
     urls.append(f"{BASE_URL}/seoul/{key}/")
+    
+    region_cards_html += f'<a href="{key}/" class="cm2-dong-card"><strong>{data["name"]}</strong><span>출장마사지</span></a>\n'
     
     dong_cards_html = ""
     for dong in data["dongs"]:
@@ -356,7 +400,13 @@ for key, data in regions.items():
     with open(f"{dir_path}/index.html", "w", encoding="utf-8") as f_region:
         f_region.write(final_region_html)
 
-# 1. robots.txt 생성
+# 서울 전체 허브 페이지 (`seoul/index.html`) 생성
+os.makedirs("seoul", exist_ok=True)
+final_seoul_hub = seoul_hub_template.safe_substitute(region_cards_html=region_cards_html)
+with open("seoul/index.html", "w", encoding="utf-8") as f_hub:
+    f_hub.write(final_seoul_hub)
+
+# robots.txt 생성
 robots_txt = """User-agent: *
 Allow: /
 
@@ -365,7 +415,7 @@ Sitemap: https://seoulm-gunmalove02.netlify.app/sitemap.xml
 with open("robots.txt", "w", encoding="utf-8") as f_robots:
     f_robots.write(robots_txt)
 
-# 2. sitemap.xml 생성
+# sitemap.xml 생성
 sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for url in urls:
     sitemap_xml += f"  <url>\n    <loc>{url}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n"
@@ -374,4 +424,4 @@ sitemap_xml += '</urlset>'
 with open("sitemap.xml", "w", encoding="utf-8") as f_sitemap:
     f_sitemap.write(sitemap_xml)
         
-print("✨ 구와 동 페이지 모두 전화/문자 버튼 세팅 완료! 추가로 robots.txt와 sitemap.xml까지 완벽하게 자동 생성되었습니다!")
+print("✨ 서울 전체 허브 페이지(seoul/index.html), 구/동 페이지, sitemap.xml, robots.txt까지 완벽하게 자동 생성되었습니다!")

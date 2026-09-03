@@ -6,6 +6,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://seoulm-gunmalove02.netlify.app/seoul/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://seoulm-gunmalove02.netlify.app/seoul/gangnamgu/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
