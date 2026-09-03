@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://seoulm-gunmalove02.netlify.app/sitemap.xml
+Sitemap: https://seoul-gunmalove3.netlify.app/sitemap.xml

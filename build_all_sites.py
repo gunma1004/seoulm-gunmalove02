@@ -2,9 +2,10 @@ import os
 import random
 from string import Template
 
-BASE_URL = "https://seoulm-gunmalove02.netlify.app"
+# 새로운 도메인 주소 반영
+BASE_URL = "https://seoul-gunmalove3.netlify.app"
 
-# 🔥 네이버 서치아드바이저 소유권 확인 메타 태그
+# 네이버 서치아드바이저 소유권 확인 메타 태그
 NAVER_VERIFY_TAG = '<meta name="naver-site-verification" content="ac29a0b48a4ab3ead0744d53af9eaa965bbbcbbb" />'
 
 # 서울시 주요 자치구 및 동 데이터베이스
@@ -164,6 +165,7 @@ dong_desc_pool_3 = ["건식 6만원부터 시작하는 100% 후불제 출장마�
 seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>서울 출장마사지·스웨디시 홈케어 예약 종합 안내 | 서울건마사랑</title>
 <meta name="description" content="서울 전 지역 출장 마사지 및 홈타이 안내 플랫폼. 전 자치구 30분 내 신속 방문. 건식 6만원부터 100% 후불제.">
+<link rel="canonical" href="{BASE_URL}/seoul/">
 {NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/" style="font-size:13px;color:#7a5c60;">🏠 홈으로</a></div></header>
@@ -203,6 +205,7 @@ seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta cha
 region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$region_desc">
+<link rel="canonical" href="{BASE_URL}/seoul/$key/">
 {NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/" style="font-size:13px;color:#7a5c60;">📍 서울 전체 목록</a></div></header>
@@ -286,6 +289,7 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
 dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>$dong_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$dong_desc">
+<link rel="canonical" href="{BASE_URL}/seoul/$key/$dong_slug/">
 {NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/$key/" style="font-size:13px;color:#7a5c60;">📍 $region_name 목록</a></div></header>
@@ -414,10 +418,10 @@ with open("seoul/index.html", "w", encoding="utf-8") as f_hub:
     f_hub.write(final_seoul_hub)
 
 # robots.txt 생성
-robots_txt = """User-agent: *
+robots_txt = f"""User-agent: *
 Allow: /
 
-Sitemap: https://seoulm-gunmalove02.netlify.app/sitemap.xml
+Sitemap: {BASE_URL}/sitemap.xml
 """
 with open("robots.txt", "w", encoding="utf-8") as f_robots:
     f_robots.write(robots_txt)
@@ -431,4 +435,4 @@ sitemap_xml += '</urlset>'
 with open("sitemap.xml", "w", encoding="utf-8") as f_sitemap:
     f_sitemap.write(sitemap_xml)
         
-print("✨ 네이버 소유권 태그 포함 전체 페이지, sitemap.xml, robots.txt 빌드가 완료되었습니다!")
+print("✨ 새로운 도메인(seoul-gunmalove3.netlify.app) 기준으로 모든 파일 및 사이트맵이 완벽하게 갱신되었습니다!")
