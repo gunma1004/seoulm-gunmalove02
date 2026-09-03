@@ -2,7 +2,7 @@ import os
 import random
 from string import Template
 
-# 새로운 도메인 주소 반영
+# 도메인 주소
 BASE_URL = "https://seoul-gunmalove3.netlify.app"
 
 # 네이버 서치아드바이저 소유권 확인 메타 태그
@@ -166,6 +166,10 @@ seoul_hub_template = Template(f"""<!doctype html><html lang="ko"><head><meta cha
 <title>서울 출장마사지·스웨디시 홈케어 예약 종합 안내 | 서울건마사랑</title>
 <meta name="description" content="서울 전 지역 출장 마사지 및 홈타이 안내 플랫폼. 전 자치구 30분 내 신속 방문. 건식 6만원부터 100% 후불제.">
 <link rel="canonical" href="{BASE_URL}/seoul/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="서울 출장마사지·스웨디시 홈케어 예약 종합 안내 | 서울건마사랑">
+<meta property="og:description" content="서울 전 지역 출장 마사지 및 홈타이 안내 플랫폼. 전 자치구 30분 내 신속 방문. 건식 6만원부터 100% 후불제.">
+<meta property="og:url" content="{BASE_URL}/seoul/">
 {NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/" style="font-size:13px;color:#7a5c60;">🏠 홈으로</a></div></header>
@@ -206,6 +210,10 @@ region_template = Template(f"""<!doctype html><html lang="ko"><head><meta charse
 <title>$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$region_desc">
 <link rel="canonical" href="{BASE_URL}/seoul/$key/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="$region_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑">
+<meta property="og:description" content="$region_desc">
+<meta property="og:url" content="{BASE_URL}/seoul/$key/">
 {NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/" style="font-size:13px;color:#7a5c60;">📍 서울 전체 목록</a></div></header>
@@ -290,6 +298,10 @@ dong_template = Template(f"""<!doctype html><html lang="ko"><head><meta charset=
 <title>$dong_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑</title>
 <meta name="description" content="$dong_desc">
 <link rel="canonical" href="{BASE_URL}/seoul/$key/$dong_slug/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="$dong_name 출장마사지·스웨디시 홈케어 예약 | 서울건마사랑">
+<meta property="og:description" content="$dong_desc">
+<meta property="og:url" content="{BASE_URL}/seoul/$key/$dong_slug/">
 {NAVER_VERIFY_TAG}
 <style>{common_style}</style></head><body>
 <header class="cm2-hd"><div class="cm2-hd-inner"><a href="/" class="cm2-logo-text">서울건마사랑</a><a href="/seoul/$key/" style="font-size:13px;color:#7a5c60;">📍 $region_name 목록</a></div></header>
@@ -435,4 +447,4 @@ sitemap_xml += '</urlset>'
 with open("sitemap.xml", "w", encoding="utf-8") as f_sitemap:
     f_sitemap.write(sitemap_xml)
         
-print("✨ 새로운 도메인(seoul-gunmalove3.netlify.app) 기준으로 모든 파일 및 사이트맵이 완벽하게 갱신되었습니다!")
+print("✨ Open Graph 태그가 모든 동·구·허브 페이지에 완벽하게 추가되었습니다!")
